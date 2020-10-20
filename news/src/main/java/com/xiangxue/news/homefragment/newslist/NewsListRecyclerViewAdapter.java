@@ -1,7 +1,6 @@
 package com.xiangxue.news.homefragment.newslist;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.xiangxue.news.R;
 import com.xiangxue.news.homefragment.api.NewsListBean;
+import com.xiangxue.news.homefragment.view.base.BaseViewHolder;
+import com.xiangxue.news.homefragment.view.titleview.TitleView;
+import com.xiangxue.news.homefragment.view.IDataChangeListener;
+import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
 import com.xiangxue.webview.WebviewActivity;
 
 import java.util.List;
@@ -64,8 +67,8 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             view = LayoutInflater.from(mContext).inflate(R.layout.picture_title_view, parent, false);
             return new PictureTitleViewHolder(view);
         } else if (viewType == VIEW_TYPE_TITLE) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.title_view, parent, false);
-            return new TitleViewHolder(view);
+
+            return new BaseViewHolder(new TitleView(mContext));
         }
 
         return null;
@@ -88,21 +91,6 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-
-    private class TitleViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView;
-
-        public TitleViewHolder(@NonNull View itemView) {
-            super(itemView);
-            titleTextView = itemView.findViewById(R.id.item_title);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WebviewActivity.startCommonWeb(mContext, "News", v.getTag()+"");
-                }
-            });
-        }
-    }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setTag(mItems.get(position).link);
@@ -112,8 +100,11 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     .load(mItems.get(position).imageurls.get(0).url)
                     .transition(withCrossFade())
                     .into(((PictureTitleViewHolder) holder).picutureImageView);
-        } else if(holder instanceof TitleViewHolder) {
-            ((TitleViewHolder) holder).titleTextView.setText(mItems.get(position).title);
+        } else if(holder.itemView instanceof TitleView) {
+            TitleViewModel titleViewModel = new TitleViewModel();
+            titleViewModel.title = mItems.get(position).title;
+            titleViewModel.navigateUrl = mItems.get(position).link;
+            ((IDataChangeListener) holder.itemView).setData(titleViewModel);
         }
     }
 }
