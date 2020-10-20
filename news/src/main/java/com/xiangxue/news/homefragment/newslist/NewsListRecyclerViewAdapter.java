@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 import com.xiangxue.news.R;
 import com.xiangxue.news.homefragment.api.NewsListBean;
 import com.xiangxue.news.homefragment.view.base.BaseViewHolder;
+import com.xiangxue.news.homefragment.view.base.BaseViewModel;
+import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleView;
+import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
 import com.xiangxue.news.homefragment.view.titleview.TitleView;
 import com.xiangxue.news.homefragment.view.IDataChangeListener;
 import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
@@ -28,18 +31,18 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  * Created by Allen on 2017/7/20.
  * 保留所有版权，未经允许请不要分享到互联网和其他人
  */
-public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private final int VIEW_TYPE_PICTURE_TITLE = 1;
     private final int VIEW_TYPE_TITLE = 2;
-    private List<NewsListBean.Contentlist> mItems;
+    private List<BaseViewModel> mItems;
     private Context mContext;
 
     NewsListRecyclerViewAdapter(Context context) {
         mContext = context;
     }
 
-    void setData(List<NewsListBean.Contentlist> items) {
+    void setData(List<BaseViewModel> items) {
         mItems = items;
         notifyDataSetChanged();
     }
@@ -54,57 +57,25 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (mItems != null && mItems.get(position).imageurls != null && mItems.get(position).imageurls.size() > 1) {
+        if (mItems != null && mItems.get(position) instanceof PictureTitleViewModel) {
             return VIEW_TYPE_PICTURE_TITLE;
         }
         return VIEW_TYPE_TITLE;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_PICTURE_TITLE) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.picture_title_view, parent, false);
-            return new PictureTitleViewHolder(view);
+            return new BaseViewHolder(new PictureTitleView(mContext));
         } else if (viewType == VIEW_TYPE_TITLE) {
-
             return new BaseViewHolder(new TitleView(mContext));
         }
-
         return null;
     }
 
-    private class PictureTitleViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView;
-        public AppCompatImageView picutureImageView;
-
-        public PictureTitleViewHolder(@NonNull View itemView) {
-            super(itemView);
-            titleTextView = itemView.findViewById(R.id.item_title);
-            picutureImageView = itemView.findViewById(R.id.item_image);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WebviewActivity.startCommonWeb(mContext, "News", v.getTag()+"");
-                }
-            });
-        }
-    }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        holder.itemView.setTag(mItems.get(position).link);
-        if(holder instanceof PictureTitleViewHolder){
-            ((PictureTitleViewHolder) holder).titleTextView.setText(mItems.get(position).title);
-            Glide.with(holder.itemView.getContext())
-                    .load(mItems.get(position).imageurls.get(0).url)
-                    .transition(withCrossFade())
-                    .into(((PictureTitleViewHolder) holder).picutureImageView);
-        } else if(holder.itemView instanceof TitleView) {
-            TitleViewModel titleViewModel = new TitleViewModel();
-            titleViewModel.title = mItems.get(position).title;
-            titleViewModel.navigateUrl = mItems.get(position).link;
-            ((IDataChangeListener) holder.itemView).setData(titleViewModel);
-        }
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+            ((IDataChangeListener) holder.mItemView).setData(mItems.get(position));
     }
 }

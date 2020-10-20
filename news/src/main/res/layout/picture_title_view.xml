@@ -6,6 +6,9 @@
         <import type="android.view.View" />
         <import type="android.text.TextUtils" />
         <import type="androidx.databinding.ObservableField" />
+        <variable
+            name="viewmodel"
+            type="com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel" />
     </data>
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
@@ -35,7 +38,8 @@
                     android:id="@+id/item_image"
                     android:layout_width="100dp"
                     android:layout_height="70dp"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitXY"
+                    app:loadImageUrl="@{viewmodel.imageUrl}"/>
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -49,6 +53,7 @@
                 android:textColor="#303030"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:text="@{viewmodel.title}"
                 tools:text="myFileName.java" />
 
         </LinearLayout>

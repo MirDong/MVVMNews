@@ -21,6 +21,9 @@ import com.xiangxue.news.R;
 import com.xiangxue.news.databinding.FragmentNewsBinding;
 import com.xiangxue.news.homefragment.api.NewsApiInterface;
 import com.xiangxue.news.homefragment.api.NewsListBean;
+import com.xiangxue.news.homefragment.view.base.BaseViewModel;
+import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
+import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +72,7 @@ public class NewsListFragment extends Fragment {
         });
         return viewDataBinding.getRoot();
     }
-    List<NewsListBean.Contentlist> contentlist = new ArrayList<>();
+   private List<BaseViewModel> mViewModelList = new ArrayList<>();
     protected void load() {
         TecentNetworkApi.getService(NewsApiInterface.class)
                 .getNewsList(getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),
@@ -78,10 +81,25 @@ public class NewsListFragment extends Fragment {
                     @Override
                     public void onSuccess(NewsListBean newsChannelsBean) {
                         if(mPage == 0) {
-                            contentlist.clear();
+                            mViewModelList.clear();
                         }
-                        contentlist.addAll(newsChannelsBean.showapiResBody.pagebean.contentlist);
-                        mAdapter.setData(contentlist);
+                        List<NewsListBean.Contentlist> contentlist = newsChannelsBean.showapiResBody.pagebean.contentlist;
+                        for (NewsListBean.Contentlist content:contentlist){
+                            if (content.imageurls!= null && content.imageurls.size() > 0){
+                                PictureTitleViewModel pictureTitleViewModel = new PictureTitleViewModel();
+                                pictureTitleViewModel.imageUrl = content.imageurls.get(0).url;
+                                pictureTitleViewModel.navigateUrl = content.link;
+                                pictureTitleViewModel.title = content.title;
+                                mViewModelList.add(pictureTitleViewModel);
+                            }else {
+                                TitleViewModel titleViewModel = new TitleViewModel();
+                                titleViewModel.title = content.title;
+                                titleViewModel.navigateUrl = content.link;
+                                mViewModelList.add(titleViewModel);
+                            }
+                        }
+
+                        mAdapter.setData(mViewModelList);
                         mPage ++;
                         viewDataBinding.refreshLayout.finishRefresh();
                         viewDataBinding.refreshLayout.finishLoadMore();
