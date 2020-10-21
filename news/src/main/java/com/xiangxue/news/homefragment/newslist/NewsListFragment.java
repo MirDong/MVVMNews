@@ -22,8 +22,8 @@ import com.xiangxue.news.R;
 import com.xiangxue.news.databinding.FragmentNewsBinding;
 import com.xiangxue.news.homefragment.api.NewsApiInterface;
 import com.xiangxue.news.homefragment.api.NewsListBean;
-import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
-import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
+import com.mvvm.dzk.common.picturetitleview.PictureTitleViewModel;
+import com.mvvm.dzk.common.titleview.TitleViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

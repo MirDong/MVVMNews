@@ -1,4 +1,4 @@
-package com.xiangxue.news.homefragment.view.picturetitleview;
+package com.mvvm.dzk.common.picturetitleview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,11 +7,12 @@ import android.widget.ImageView;
 import androidx.databinding.BindingAdapter;
 import com.bumptech.glide.Glide;
 import com.mvvm.dzk.base.customview.BaseCustomView;
-import com.xiangxue.news.R;
-import com.xiangxue.news.databinding.PictureTitleViewBinding;
+import com.mvvm.dzk.common.R;
+import com.mvvm.dzk.common.databinding.PictureTitleViewBinding;
 import com.xiangxue.webview.WebviewActivity;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 
 public class PictureTitleView extends BaseCustomView<PictureTitleViewBinding,PictureTitleViewModel> {
     public PictureTitleView(Context context) {

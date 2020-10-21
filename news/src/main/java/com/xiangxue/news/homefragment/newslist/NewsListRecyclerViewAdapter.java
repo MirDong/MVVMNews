@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mvvm.dzk.base.customview.BaseViewModel;
-import com.mvvm.dzk.base.customview.IBaseCustomView;
-import com.xiangxue.news.homefragment.view.base.BaseViewHolder;
-import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleView;
-import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
-import com.xiangxue.news.homefragment.view.titleview.TitleView;
+import com.mvvm.dzk.base.recycleview.BaseViewHolder;
+import com.mvvm.dzk.common.picturetitleview.PictureTitleView;
+import com.mvvm.dzk.common.picturetitleview.PictureTitleViewModel;
+import com.mvvm.dzk.common.titleview.TitleView;
+
 
 import java.util.List;
 
@@ -65,6 +65,6 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHo
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-            ((IBaseCustomView<BaseViewModel>) holder.mItemView).setData(mItems.get(position));
+            holder.bind(mItems.get(position));
     }
 }

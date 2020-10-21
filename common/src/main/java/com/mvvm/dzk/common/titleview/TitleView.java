@@ -1,9 +1,9 @@
-package com.xiangxue.news.homefragment.view.titleview;
+package com.mvvm.dzk.common.titleview;
 
 import android.content.Context;
 import com.mvvm.dzk.base.customview.BaseCustomView;
-import com.xiangxue.news.R;
-import com.xiangxue.news.databinding.TitleViewBinding;
+import com.mvvm.dzk.common.R;
+import com.mvvm.dzk.common.databinding.TitleViewBinding;
 import com.xiangxue.webview.WebviewActivity;
 
 public class TitleView extends BaseCustomView<TitleViewBinding,TitleViewModel> {

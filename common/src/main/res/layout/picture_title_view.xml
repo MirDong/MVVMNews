@@ -8,7 +8,7 @@
         <import type="androidx.databinding.ObservableField" />
         <variable
             name="viewmodel"
-            type="com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel" />
+            type="com.mvvm.dzk.common.picturetitleview.PictureTitleViewModel" />
     </data>
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"

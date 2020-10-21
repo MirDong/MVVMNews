@@ -1,4 +1,4 @@
-package com.xiangxue.news.homefragment.view.picturetitleview;
+package com.mvvm.dzk.common.picturetitleview;
 
 
 import com.mvvm.dzk.base.customview.BaseViewModel;

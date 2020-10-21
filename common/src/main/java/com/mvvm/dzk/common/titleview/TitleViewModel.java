@@ -1,4 +1,4 @@
-package com.xiangxue.news.homefragment.view.titleview;
+package com.mvvm.dzk.common.titleview;
 
 
 import com.mvvm.dzk.base.customview.BaseViewModel;
