@@ -1,6 +1,7 @@
 package com.xiangxue.news.homefragment.view.titleview;
 
-import com.xiangxue.news.homefragment.view.base.BaseViewModel;
+
+import com.mvvm.dzk.base.customview.BaseViewModel;
 
 public class TitleViewModel extends BaseViewModel {
 }

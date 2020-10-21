@@ -1,30 +1,19 @@
 package com.xiangxue.news.homefragment.newslist;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.xiangxue.news.R;
-import com.xiangxue.news.homefragment.api.NewsListBean;
+import com.mvvm.dzk.base.customview.BaseViewModel;
+import com.mvvm.dzk.base.customview.IBaseCustomView;
 import com.xiangxue.news.homefragment.view.base.BaseViewHolder;
-import com.xiangxue.news.homefragment.view.base.BaseViewModel;
 import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleView;
 import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
 import com.xiangxue.news.homefragment.view.titleview.TitleView;
-import com.xiangxue.news.homefragment.view.IDataChangeListener;
-import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
-import com.xiangxue.webview.WebviewActivity;
 
 import java.util.List;
-
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 
 /**
@@ -76,6 +65,6 @@ public class NewsListRecyclerViewAdapter extends RecyclerView.Adapter<BaseViewHo
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
-            ((IDataChangeListener) holder.mItemView).setData(mItems.get(position));
+            ((IBaseCustomView<BaseViewModel>) holder.mItemView).setData(mItems.get(position));
     }
 }

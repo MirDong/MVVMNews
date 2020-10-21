@@ -1,4 +1,4 @@
-package com.xiangxue.news.homefragment.view.base;
+package com.mvvm.dzk.base.customview;
 
 public class BaseViewModel {
     public String title;

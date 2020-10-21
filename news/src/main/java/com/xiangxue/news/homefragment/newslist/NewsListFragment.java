@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mvvm.dzk.base.customview.BaseViewModel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -21,7 +22,6 @@ import com.xiangxue.news.R;
 import com.xiangxue.news.databinding.FragmentNewsBinding;
 import com.xiangxue.news.homefragment.api.NewsApiInterface;
 import com.xiangxue.news.homefragment.api.NewsListBean;
-import com.xiangxue.news.homefragment.view.base.BaseViewModel;
 import com.xiangxue.news.homefragment.view.picturetitleview.PictureTitleViewModel;
 import com.xiangxue.news.homefragment.view.titleview.TitleViewModel;
 
