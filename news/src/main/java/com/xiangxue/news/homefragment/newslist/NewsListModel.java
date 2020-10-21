@@ -1,8 +1,7 @@
 package com.xiangxue.news.homefragment.newslist;
 
 import com.mvvm.dzk.base.customview.BaseViewModel;
-import com.mvvm.dzk.base.mvvm.model.IBaseModelListener;
-import com.mvvm.dzk.base.mvvm.model.PagingResult;
+import com.mvvm.dzk.base.mvvm.model.BaseMvvmModel;
 import com.mvvm.dzk.common.picturetitleview.PictureTitleViewModel;
 import com.mvvm.dzk.common.titleview.TitleViewModel;
 import com.xiangxue.network.TecentNetworkApi;
@@ -13,14 +12,13 @@ import com.xiangxue.news.homefragment.api.NewsListBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsListModel {
-    private IBaseModelListener<List<BaseViewModel>> mBaseModelListener;
+public class NewsListModel extends BaseMvvmModel<NewsListBean,List<BaseViewModel>> {
+    private static final String CACHE_KEY_NEWS_LIST = "cache_key_news_list";
     private String mChannelId;
     private String mChannelName;
-    private int mPage = 1;
-    public NewsListModel(IBaseModelListener<List<BaseViewModel>> listener,String channelId,String channelName){
-        this.mBaseModelListener = listener;
-        this.mChannelId = mChannelId;
+    public NewsListModel(String channelId,String channelName){
+        super(true,CACHE_KEY_NEWS_LIST,1);
+        this.mChannelId = channelId;
         this.mChannelName = channelName;
     }
 
@@ -29,7 +27,8 @@ public class NewsListModel {
         loadNextPage();
     }
 
-    public void loadNextPage(){
+    @Override
+    protected void load() {
         TecentNetworkApi.getService(NewsApiInterface.class)
                 .getNewsList(mChannelId, mChannelName, String.valueOf(mPage))
                 .compose(TecentNetworkApi.getInstance().applySchedulers(new BaseObserver<NewsListBean>() {
@@ -51,18 +50,14 @@ public class NewsListModel {
                                 mViewModelList.add(titleViewModel);
                             }
                         }
-                        if (mBaseModelListener != null){
-                            mBaseModelListener.onLoadSuccess(mViewModelList,new PagingResult(mPage == 1,mViewModelList.isEmpty(),mViewModelList.size() >= 20));
-                        }
-                        mPage ++;
+                       notifyResultToListener(newsChannelsBean,mViewModelList);
                     }
 
                     @Override
                     public void onFailure(Throwable e) {
-                        if (mBaseModelListener != null){
-                            mBaseModelListener.onLoadFail(e.getMessage());
-                        }
+                        loadFail(e.getMessage());
                     }
                 }));
     }
+
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.mvvm.dzk.base.mvvm.model.BaseMvvmModel;
 import com.mvvm.dzk.base.mvvm.model.IBaseModelListener;
 import com.mvvm.dzk.base.mvvm.model.PagingResult;
 import com.xiangxue.network.TecentNetworkApi;
@@ -41,18 +42,19 @@ public class HeadlineNewsFragment extends Fragment implements IBaseModelListener
         viewDataBinding.viewpager.setAdapter(adapter);
         viewDataBinding.tablayout.setupWithViewPager(viewDataBinding.viewpager);
         viewDataBinding.viewpager.setOffscreenPageLimit(1);
-        mHeadlineNewsModel = new HeadlineNewsModel(this);
-        mHeadlineNewsModel.load();
+        mHeadlineNewsModel = new HeadlineNewsModel();
+        mHeadlineNewsModel.register(this);
+        mHeadlineNewsModel.loadNextPage();
         return viewDataBinding.getRoot();
     }
 
     @Override
-    public void onLoadSuccess(List<NewsChannelsBean.ChannelList> channelLists, PagingResult... results) {
+    public void onLoadSuccess(BaseMvvmModel baseMvvmModel, List<NewsChannelsBean.ChannelList> channelLists, PagingResult... results) {
         adapter.setChannels(channelLists);
     }
 
     @Override
-    public void onLoadFail(String message) {
+    public void onLoadFail(BaseMvvmModel baseMvvmModel,String message,PagingResult... results) {
         Log.e(TAG, "onLoadFail: "+ message);
     }
 }

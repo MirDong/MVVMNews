@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.mvvm.dzk.base.customview.BaseViewModel;
+import com.mvvm.dzk.base.mvvm.model.BaseMvvmModel;
 import com.mvvm.dzk.base.mvvm.model.IBaseModelListener;
 import com.mvvm.dzk.base.mvvm.model.PagingResult;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -34,7 +35,6 @@ public class NewsListFragment extends Fragment implements IBaseModelListener<Lis
 
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_ID = "bundle_key_param_channel_id";
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_NAME = "bundle_key_param_channel_name";
-    private int mPage = 1;
     private NewsListModel mNewsListModel;
     private List<BaseViewModel>mViewModels = new ArrayList<>();
     public static NewsListFragment newInstance(String channelId, String channelName) {
@@ -53,7 +53,9 @@ public class NewsListFragment extends Fragment implements IBaseModelListener<Lis
         viewDataBinding.listview.setHasFixedSize(true);
         viewDataBinding.listview.setLayoutManager(new LinearLayoutManager(getContext()));
         viewDataBinding.listview.setAdapter(mAdapter);
-        mNewsListModel = new NewsListModel(this,getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME));
+
+        mNewsListModel = new NewsListModel(getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME));
+        mNewsListModel.register(this);
         mNewsListModel.loadNextPage();
         viewDataBinding.refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -72,7 +74,7 @@ public class NewsListFragment extends Fragment implements IBaseModelListener<Lis
 
 
     @Override
-    public void onLoadSuccess(List<BaseViewModel> baseViewModelList, PagingResult... results) {
+    public void onLoadSuccess(BaseMvvmModel baseMvvmModel,List<BaseViewModel> baseViewModelList, PagingResult... results) {
         if (results != null && results.length > 0 && results[0].isFirstPage){
             mViewModels.clear();
         }
@@ -83,7 +85,7 @@ public class NewsListFragment extends Fragment implements IBaseModelListener<Lis
     }
 
     @Override
-    public void onLoadFail(String message) {
+    public void onLoadFail(BaseMvvmModel baseMvvmModel,String message, PagingResult... results) {
         Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
     }
 }
