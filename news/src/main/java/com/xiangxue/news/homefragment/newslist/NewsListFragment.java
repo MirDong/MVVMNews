@@ -11,19 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.Toast;
 import com.mvvm.dzk.base.customview.BaseViewModel;
+import com.mvvm.dzk.base.mvvm.model.IBaseModelListener;
+import com.mvvm.dzk.base.mvvm.model.PagingResult;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.xiangxue.network.TecentNetworkApi;
-import com.xiangxue.network.observer.BaseObserver;
 import com.xiangxue.news.R;
 import com.xiangxue.news.databinding.FragmentNewsBinding;
-import com.xiangxue.news.homefragment.api.NewsApiInterface;
-import com.xiangxue.news.homefragment.api.NewsListBean;
-import com.mvvm.dzk.common.picturetitleview.PictureTitleViewModel;
-import com.mvvm.dzk.common.titleview.TitleViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +28,15 @@ import java.util.List;
  * Created by Allen on 2017/7/20.
  * 保留所有版权，未经允许请不要分享到互联网和其他人
  */
-public class NewsListFragment extends Fragment {
+public class NewsListFragment extends Fragment implements IBaseModelListener<List<BaseViewModel>> {
     private NewsListRecyclerViewAdapter mAdapter;
     private FragmentNewsBinding viewDataBinding;
 
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_ID = "bundle_key_param_channel_id";
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_NAME = "bundle_key_param_channel_name";
     private int mPage = 1;
-
+    private NewsListModel mNewsListModel;
+    private List<BaseViewModel>mViewModels = new ArrayList<>();
     public static NewsListFragment newInstance(String channelId, String channelName) {
         NewsListFragment fragment = new NewsListFragment();
         Bundle bundle = new Bundle();
@@ -56,59 +53,37 @@ public class NewsListFragment extends Fragment {
         viewDataBinding.listview.setHasFixedSize(true);
         viewDataBinding.listview.setLayoutManager(new LinearLayoutManager(getContext()));
         viewDataBinding.listview.setAdapter(mAdapter);
-        load();
+        mNewsListModel = new NewsListModel(this,getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME));
+        mNewsListModel.loadNextPage();
         viewDataBinding.refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mPage = 0;
-                load();
+                mNewsListModel.refresh();
             }
         });
         viewDataBinding.refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                load();
+                mNewsListModel.loadNextPage();
             }
         });
         return viewDataBinding.getRoot();
     }
-   private List<BaseViewModel> mViewModelList = new ArrayList<>();
-    protected void load() {
-        TecentNetworkApi.getService(NewsApiInterface.class)
-                .getNewsList(getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),
-                        getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME), String.valueOf(mPage))
-                .compose(TecentNetworkApi.getInstance().applySchedulers(new BaseObserver<NewsListBean>() {
-                    @Override
-                    public void onSuccess(NewsListBean newsChannelsBean) {
-                        if(mPage == 0) {
-                            mViewModelList.clear();
-                        }
-                        List<NewsListBean.Contentlist> contentlist = newsChannelsBean.showapiResBody.pagebean.contentlist;
-                        for (NewsListBean.Contentlist content:contentlist){
-                            if (content.imageurls!= null && content.imageurls.size() > 0){
-                                PictureTitleViewModel pictureTitleViewModel = new PictureTitleViewModel();
-                                pictureTitleViewModel.imageUrl = content.imageurls.get(0).url;
-                                pictureTitleViewModel.navigateUrl = content.link;
-                                pictureTitleViewModel.title = content.title;
-                                mViewModelList.add(pictureTitleViewModel);
-                            }else {
-                                TitleViewModel titleViewModel = new TitleViewModel();
-                                titleViewModel.title = content.title;
-                                titleViewModel.navigateUrl = content.link;
-                                mViewModelList.add(titleViewModel);
-                            }
-                        }
 
-                        mAdapter.setData(mViewModelList);
-                        mPage ++;
-                        viewDataBinding.refreshLayout.finishRefresh();
-                        viewDataBinding.refreshLayout.finishLoadMore();
-                    }
 
-                    @Override
-                    public void onFailure(Throwable e) {
-                        e.printStackTrace();
-                    }
-                }));
+    @Override
+    public void onLoadSuccess(List<BaseViewModel> baseViewModelList, PagingResult... results) {
+        if (results != null && results.length > 0 && results[0].isFirstPage){
+            mViewModels.clear();
+        }
+        mViewModels.addAll(baseViewModelList);
+        mAdapter.setData(mViewModels);
+        viewDataBinding.refreshLayout.finishRefresh();
+        viewDataBinding.refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void onLoadFail(String message) {
+        Toast.makeText(getContext(),message,Toast.LENGTH_SHORT).show();
     }
 }
