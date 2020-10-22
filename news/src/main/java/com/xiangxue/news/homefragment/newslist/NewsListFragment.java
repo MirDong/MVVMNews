@@ -56,7 +56,7 @@ public class NewsListFragment extends Fragment implements IBaseModelListener<Lis
 
         mNewsListModel = new NewsListModel(getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME));
         mNewsListModel.register(this);
-        mNewsListModel.loadNextPage();
+        mNewsListModel.getCachedDataAndLoad();
         viewDataBinding.refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
