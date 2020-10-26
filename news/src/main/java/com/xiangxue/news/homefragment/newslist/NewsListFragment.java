@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.kingja.loadsir.core.LoadService;
 import com.mvvm.dzk.base.customview.BaseViewModel;
+import com.mvvm.dzk.base.mvvm.viewmodel.ViewStatus;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -25,11 +28,11 @@ import java.util.List;
  * Created by Allen on 2017/7/20.
  * 保留所有版权，未经允许请不要分享到互联网和其他人
  */
-public class NewsListFragment extends Fragment {
+public class NewsListFragment extends Fragment implements Observer{
     private static final String TAG = "NewsListFragment";
     private NewsListRecyclerViewAdapter mAdapter;
     private FragmentNewsBinding viewDataBinding;
-
+    private LoadService mLoadService;
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_ID = "bundle_key_param_channel_id";
     protected final static String BUNDLE_KEY_PARAM_CHANNEL_NAME = "bundle_key_param_channel_name";
     private NewsListViewModel mNewsListViewModel;
@@ -72,6 +75,7 @@ public class NewsListFragment extends Fragment {
                 viewDataBinding.refreshLayout.finishLoadMore();
             }
         });
+
         mNewsListViewModel.errorMsg.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String message) {
@@ -79,5 +83,12 @@ public class NewsListFragment extends Fragment {
             }
         });
         return viewDataBinding.getRoot();
+    }
+
+    @Override
+    public void onChanged(Object o) {
+        if (o instanceof ViewStatus){
+//            switch (o)
+        }
     }
 }
