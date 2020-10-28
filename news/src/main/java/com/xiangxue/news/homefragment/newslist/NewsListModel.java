@@ -22,10 +22,10 @@ public class NewsListModel extends BaseMvvmModel<NewsListBean,List<BaseViewModel
         this.mChannelName = channelName;
     }
 
-    public void refresh(){
+    /*public void refresh(){
         mPage = 1;
         loadNextPage();
-    }
+    }*/
 
     @Override
     protected void load() {
@@ -53,7 +53,7 @@ public class NewsListModel extends BaseMvvmModel<NewsListBean,List<BaseViewModel
                 mViewModelList.add(titleViewModel);
             }
         }
-        notifyResultToListener(newsChannelsBean,mViewModelList);
+        notifyResultToListener(newsChannelsBean,mViewModelList,isFromCache);
     }
 
     @Override

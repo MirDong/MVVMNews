@@ -51,7 +51,7 @@ public class NewsListFragment extends Fragment {
         viewDataBinding.listview.setLayoutManager(new LinearLayoutManager(getContext()));
         viewDataBinding.listview.setAdapter(mAdapter);
         mNewsListViewModel = new NewsListViewModel(getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_ID),getArguments().getString(BUNDLE_KEY_PARAM_CHANNEL_NAME));
-
+        getLifecycle().addObserver(mNewsListViewModel);
         viewDataBinding.refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
@@ -64,7 +64,7 @@ public class NewsListFragment extends Fragment {
                 mNewsListViewModel.loadNextPage();
             }
         });
-        mNewsListViewModel.viewModelList.observe(this, new Observer<List<BaseViewModel>>() {
+        mNewsListViewModel.dataList.observe(this, new Observer<List<BaseViewModel>>() {
             @Override
             public void onChanged(List<BaseViewModel> baseViewModelList) {
                 mAdapter.setData(baseViewModelList);
@@ -72,7 +72,7 @@ public class NewsListFragment extends Fragment {
                 viewDataBinding.refreshLayout.finishLoadMore();
             }
         });
-        mNewsListViewModel.errorMsg.observe(this, new Observer<String>() {
+        mNewsListViewModel.errorMessage.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String message) {
                 Log.e(TAG, "errorMsg = " + message);

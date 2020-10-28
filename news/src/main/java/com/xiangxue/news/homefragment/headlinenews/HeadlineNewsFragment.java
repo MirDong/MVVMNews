@@ -20,7 +20,7 @@ public class HeadlineNewsFragment extends Fragment {
     private static final String TAG = "HeadlineNewsFragment";
     public HeadlineNewsFragmentAdapter adapter;
     FragmentHomeBinding viewDataBinding;
-    private HeadlineNewsViewModel mHeadlineNewsViewModel;
+    private HeadlineNewsViewModel mHeadlineNewsViewModel = new HeadlineNewsViewModel();;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         viewDataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
@@ -29,13 +29,13 @@ public class HeadlineNewsFragment extends Fragment {
         viewDataBinding.viewpager.setAdapter(adapter);
         viewDataBinding.tablayout.setupWithViewPager(viewDataBinding.viewpager);
         viewDataBinding.viewpager.setOffscreenPageLimit(1);
-        mHeadlineNewsViewModel = new HeadlineNewsViewModel();
-        mHeadlineNewsViewModel.channelListLiveData.observe(this, new Observer<List<NewsChannelsBean.ChannelList>>() {
+        mHeadlineNewsViewModel.dataList.observe(this, new Observer<List<NewsChannelsBean.ChannelList>>() {
             @Override
             public void onChanged(List<NewsChannelsBean.ChannelList> channelLists) {
                 adapter.setChannels(channelLists);
             }
         });
+        getLifecycle().addObserver(mHeadlineNewsViewModel);
         return viewDataBinding.getRoot();
     }
 }

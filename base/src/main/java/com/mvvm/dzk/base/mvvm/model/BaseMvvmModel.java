@@ -35,6 +35,10 @@ public abstract class BaseMvvmModel<NETWORK_DATA, CONVERTED_DATA> implements Mvv
         }
     }
 
+    public boolean isPaging(){
+        return mIsPaging;
+    }
+
     public void register(IBaseModelListener listener) {
         mModelListenerWeakReference = new WeakReference<>(listener);
     }
@@ -95,29 +99,31 @@ public abstract class BaseMvvmModel<NETWORK_DATA, CONVERTED_DATA> implements Mvv
         }
     }
 
-    protected void notifyResultToListener(NETWORK_DATA networkData, CONVERTED_DATA convertedData) {
+    protected void notifyResultToListener(NETWORK_DATA networkData, CONVERTED_DATA convertedData,boolean isFromCache) {
         IBaseModelListener listener = mModelListenerWeakReference.get();
         if (listener != null) {
             if (mIsPaging) {
                 listener.onLoadSuccess(this, convertedData, new PagingResult(mPage == INIT_PAGE_NUMBER,
                         convertedData == null ? true : ((List) convertedData).isEmpty(), ((List) convertedData).size() >= 20));
-                if (mCachePreferenceKey != null && mPage == INIT_PAGE_NUMBER) {
+                if (mCachePreferenceKey != null && mPage == INIT_PAGE_NUMBER&&!isFromCache) {
                     saveDataToPrefernce(networkData);
                 }
             } else {
                 listener.onLoadSuccess(this, convertedData);
-                if (mCachePreferenceKey != null) {
+                if (mCachePreferenceKey != null&&!isFromCache) {
                     saveDataToPrefernce(networkData);
                 }
             }
 
             if (mIsPaging) {
-                if (convertedData != null && ((List) convertedData).size() > 0) {
+                if (convertedData != null && ((List) convertedData).size() > 0&&!isFromCache) {
                     mPage++;
                 }
             }
         }
-        mIsLoading = false;
+        if (!isFromCache){
+            mIsLoading = false;
+        }
     }
 
     protected void loadFail(String message) {

@@ -29,7 +29,7 @@ public class HeadlineNewsModel extends BaseMvvmModel<NewsChannelsBean, List<News
     @Override
     public void onSuccess(boolean isFromCache, NewsChannelsBean newsChannelsBean) {
         Log.e("MainActivity", new Gson().toJson(newsChannelsBean));
-        notifyResultToListener(newsChannelsBean,newsChannelsBean.showapiResBody.channelList);
+        notifyResultToListener(newsChannelsBean,newsChannelsBean.showapiResBody.channelList,isFromCache);
     }
 
     @Override
