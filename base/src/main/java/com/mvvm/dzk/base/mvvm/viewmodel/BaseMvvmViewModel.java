@@ -12,6 +12,7 @@ import com.mvvm.dzk.base.mvvm.model.BaseMvvmModel;
 import com.mvvm.dzk.base.mvvm.model.IBaseModelListener;
 import com.mvvm.dzk.base.mvvm.model.PagingResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +55,7 @@ public abstract class BaseMvvmViewModel<MODEL extends BaseMvvmModel,DATA> extend
             model = createModel();
             if (model != null){
                 model.register(this);
+                dataList.setValue(new ArrayList<DATA>());
             }else {
                 throw new NullPointerException("model is null");
             }

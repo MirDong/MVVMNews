@@ -36,6 +36,7 @@ public class HeadlineNewsFragment extends Fragment {
             }
         });
         getLifecycle().addObserver(mHeadlineNewsViewModel);
+        mHeadlineNewsViewModel.getCachedDataAndLoad();
         return viewDataBinding.getRoot();
     }
 }
